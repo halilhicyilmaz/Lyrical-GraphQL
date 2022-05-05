@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react"
-import {
-    useQuery,
-    gql,
-    useMutation
-} from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom'
 import { Button, Grid } from "@mui/material";
 import CustomTextField from "../components/CustomTextField";
@@ -18,7 +14,9 @@ const SongCreate = () => {
         e.preventDefault()
         try {
 
-            await AddSong({ variables: { text: title } });
+            await AddSong({ variables: { text: title } })
+
+            history("/")
 
         } catch (error) {
             console.log(error)

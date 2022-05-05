@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react"
-import {
-    useQuery,
-    gql
-} from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import { useNavigate } from 'react-router-dom'
-import { Grid, IconButton, Typography } from "@mui/material";
+import { Grid, IconButton, Typography, Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-
+import fetchSongs from '../queries/fetchSongs'
+import deleteSong from '../queries/deleteSong'
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const SongList = () => {
     const history = useNavigate()
 
     const styles = {
-        addButton: {
+        buttons: {
             color: "white",
             backgroundColor: 'red',
             '&:hover': {
@@ -22,8 +21,11 @@ const SongList = () => {
     }
 
 
-    const { loading, error, data } = useQuery(query)
+    const { loading, error, data, refetch } = useQuery(fetchSongs)
+    const [DeleteSong] = useMutation(deleteSong);
+
     const [songList, setSongList] = useState([])
+
 
     useEffect(() => {
         if (data) {
@@ -37,18 +39,28 @@ const SongList = () => {
         <Grid container >
 
             {
-                songList.map((song, i) => {
+                songList.map(({ id, title }, i) => {
                     return <Grid item xs={12} key={i} sx={{ textAlign: "-webkit-center" }}>
-                        <Grid item xs={4} key={i} textAlign='center'>
-                            <Typography variant='h4' >{song.title}</Typography>
+                        <Grid item container xs={4} key={i} justifyContent="space-between">
+                            <Grid item>
+                                <Typography variant='h4' >{title}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <IconButton sx={styles.buttons} aria-label="add new song" onClick={() => {
+                                    DeleteSong({ variables: { id: id } })
+                                    refetch()
+                                }}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Grid>
                         </Grid>
                     </Grid>
                 })
             }
-            <Grid item xs={12} sx={{ textAlign: "-webkit-center" }}>
+            <Grid item xs={12} sx={{ textAlign: "-webkit-center", marginTop: "20px" }}>
                 <Grid item xs={4} textAlign='end'>
-                    <IconButton sx={styles.addButton} aria-label="add new song" onClick={() => history("/songs/new")}>
-                        <AddIcon></AddIcon>
+                    <IconButton sx={styles.buttons} aria-label="add new song" onClick={() => history("/songs/new")}>
+                        <AddIcon />
                     </IconButton>
                 </Grid>
             </Grid>
@@ -59,14 +71,4 @@ const SongList = () => {
 
 }
 
-const query = gql`
-{
-    songs{
-        title
-    },
-    lyric(id:"626d08c9dba2b82e8b19abac"){
-        content
-    }
-}
-`
 export default (SongList)
