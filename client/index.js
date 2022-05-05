@@ -6,19 +6,31 @@ import {
   ApolloProvider
 } from "@apollo/client";
 
-import SongList from './components/SongList';
 import reportWebVitals from '../reportWebVitals';
+import AppRouter from './router/AppRouter';
+
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore'
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  }
+}
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <SongList />
+      <AppRouter />
     </ApolloProvider>
   </React.StrictMode>
 
