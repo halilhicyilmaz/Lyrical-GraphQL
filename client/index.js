@@ -23,7 +23,8 @@ const defaultOptions = {
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
   cache: new InMemoryCache(),
-  defaultOptions
+  defaultOptions,
+  connectToDevTools: true
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

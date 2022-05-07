@@ -8,7 +8,9 @@ const SongCreate = () => {
     const history = useNavigate()
 
     const [title, setTitle] = useState('')
+
     const [AddSong, { data, loading, error }] = useMutation(mutation);
+
 
     const onSubmit = async (e) => {
         e.preventDefault()
